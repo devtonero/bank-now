@@ -80,14 +80,25 @@ btnScrollTo.addEventListener('click', () => {
 });
 
 //Page Navigation
-document.querySelectorAll('.nav__link').forEach(function (el) {
-  el.addEventListener('click', function (e) {
-    e.preventDefault();
-    const id = this.getAttribute('href');
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
 
-    console.log(id);
-  });
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+//     const id = this.getAttribute('href');
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+
+//     console.log(id);
+//   });
+// });
+
+// using event delegation to add our smooth scrool for better optimzation
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    e.preventDefault();
+    const id = e.target.getAttribute('href');
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+    console.log('my gosh');
+  }
 });
 /////////////////////////////////
 
