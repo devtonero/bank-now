@@ -2,6 +2,10 @@
 
 ///////////////////////////////////////
 // Modal window
+const nav = document.querySelector('.nav');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const opContente = document.querySelectorAll('.operations__content');
 
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
@@ -97,8 +101,111 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
     e.preventDefault();
     const id = e.target.getAttribute('href');
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-    console.log('my gosh');
   }
+});
+
+//tabbed component
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+  if (!clicked) return;
+  //remove active classes
+  tabs.forEach(bt => bt.classList.remove('operations__tab--active'));
+  opContente.forEach(bt => bt.classList.remove('operations__content--active'));
+  //add active classes
+  clicked.classList.add('operations__tab--active');
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
+//nav fade animation
+const navFade = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const navLink = e.target;
+    const siblings = navLink.closest('.nav').querySelectorAll('.nav__link');
+    const logo = navLink.closest('.nav').querySelector('img');
+    //console.log(navLink);
+    siblings.forEach(el => {
+      if (el !== navLink) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+nav.addEventListener('mouseover', navFade.bind(0.5));
+nav.addEventListener('mouseout', navFade.bind(1));
+
+//sticky nav
+// const initialCord = section1.getBoundingClientRect();
+// window.addEventListener('scroll', function (e) {
+//   if (window.scrollY > initialCord.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// });
+
+//stick nav using intersection API
+const navheight = nav.getBoundingClientRect().height;
+
+const stickNav = entries => {
+  const [entry] = entries;
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+const stickyObs = {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${90}px`,
+};
+
+const headerObs = new IntersectionObserver(stickNav, stickyObs);
+headerObs.observe(header);
+
+//reveal section
+const allSecction = document.querySelectorAll('.section');
+const revSec = (ent, obs) => {
+  const [entry] = ent;
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  obs.unobserve(entry.target);
+};
+const sectObs = new IntersectionObserver(revSec, {
+  root: null,
+  threshold: 0.15,
+});
+allSecction.forEach(sect => {
+  sectObs.observe(sect);
+  sect.classList.add('section--hidden');
+});
+
+//lazy loading img
+const ingStart = document.querySelectorAll('img[data-src]');
+
+const loadImg = function (ent, obs) {
+  const [entr] = ent;
+  if (!entr.isIntersecting) return;
+  //replace d source
+  entr.target.src = entr.target.dataset.src;
+
+  entr.target.addEventListener('load', function () {
+    entr.target.classList.remove('lazy-img');
+  });
+  obs.unobserve(entr.target);
+};
+
+const imgObs = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '500px',
+});
+ingStart.forEach(alt => {
+  imgObs.observe(alt);
+});
+
+//slider
+const mslider = document.querySelector('.slider');
+const mslide = document.querySelector('.slide');
+console.log((mslide.classList);
+mslide.forEach((s, i) => {
+  s.style;
 });
 /////////////////////////////////
 
