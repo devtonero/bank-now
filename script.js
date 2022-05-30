@@ -201,14 +201,84 @@ ingStart.forEach(alt => {
 });
 
 //slider
-const mslider = document.querySelector('.slider');
-const mslide = document.querySelector('.slide');
-console.log((mslide.classList);
-mslide.forEach((s, i) => {
-  s.style;
-});
+const slider = () => {
+  const mslide = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const tDots = document.querySelector('.dots');
+
+  //
+  let curSlide = 0;
+  const maxslide = mslide.length - 1;
+
+  //
+  const cDots = function () {
+    mslide.forEach((_, i) => {
+      tDots.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}" ></button>`
+      );
+    });
+  };
+
+  const sliCont = slide => {
+    mslide.forEach((sli, id) => {
+      sli.style.transform = `translate(${100 * (id - slide)}%)`;
+    });
+  };
+
+  const dotsAct = function (sli) {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(doy => doy.classList.remove('dots__dot--active'));
+
+    const eb = document
+      .querySelector(`.dots__dot[data-slide="${sli}"]`)
+      .classList.add('dots__dot--active');
+  };
+
+  const nextSlide = () => {
+    if (curSlide === maxslide) curSlide = 0;
+    else curSlide++;
+    sliCont(curSlide);
+    dotsAct(curSlide);
+  };
+  const prevSlide = () => {
+    if (curSlide === 0) curSlide = maxslide;
+    else curSlide--;
+    sliCont(curSlide);
+    dotsAct(curSlide);
+  };
+
+  const initFu = () => {
+    sliCont(0);
+    cDots();
+    dotsAct(0);
+  };
+  initFu();
+  //move to next slide
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') nextSlide();
+    e.key === 'ArrowLeft' && prevSlide();
+  });
+  tDots.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dots__dot')) {
+      const { slide } = e.target.dataset;
+      sliCont(slide);
+      dotsAct(slide);
+    }
+  });
+};
+slider();
 /////////////////////////////////
 
+window.addEventListener('beforeunload', function (e) {
+  //e.preventDefault();
+  console.log(e);
+  e.returnValue = '';
+});
 // const randomNum = (min, max) =>
 //   Math.floor(Math.random() * (max - min + 1) + min);
 // console.log(randomNum(2, 7));
